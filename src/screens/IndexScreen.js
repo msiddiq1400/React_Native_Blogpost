@@ -1,4 +1,4 @@
-import {React, useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
 import {Context} from '../context/BlogContext';
 import TrashSvg from '../assets/icons/trash.svg';
@@ -6,7 +6,20 @@ import PlusSvg from '../assets/icons/plus.svg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const IndexScreen = ({navigation}) => {
-    const {state, deleteBlogPost} = useContext(Context)
+    const {state, deleteBlogPost, getBlogPosts} = useContext(Context)
+
+    useEffect(() => {
+        getBlogPosts();
+
+        const listner = navigation.addListener('didFocus', () => {
+            getBlogPosts();
+        })
+
+        return () => {
+            listner.remove();
+        }
+    }, [])
+
     return (
         <View>
             <FlatList 
